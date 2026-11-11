@@ -1,6 +1,6 @@
 import bcrypt
 from fastapi import HTTPException
-from sqlalchemy import select, func, or_
+from sqlalchemy import select, func, or_, and_
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -68,7 +68,7 @@ async def check_authorization(
         .join(Roles, Roles.id == users_roles_relation.c.role_id)
         .join(roles_rights_relation, Roles.id == roles_rights_relation.c.role_id)
         .join(Rights, Rights.id == roles_rights_relation.c.right_id)
-        .where(request_right)
+        .where(and_(request_right, token.user_id == User.id))
     )
     result = await session.execute(query)
     count: int = result.scalar()
