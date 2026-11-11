@@ -31,9 +31,9 @@ async def check_relevance_token(
     if len(field_data) != 2:
         raise HTTPException(400, "В заголовок не был передан"
                                  " префикс или значение токена")
-    if field_data[0] not in ["Bearer", "JWT"]:
+    if field_data[0] not in ["Bearer"]:
         raise HTTPException(400, f"Переданный префикс {field_data[0]} не поддерживается. "
-                                 f"Используйте Bearer или JWT")
+                                 f"Используйте Bearer")
 
     stml = select(Token).where(Token.token == field_data[1])
     try:
